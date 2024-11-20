@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#333333"
-      }
+      },
+      "package": "com.thimo.WOLClient"
     },
     "web": {
       "favicon": "./assets/favicon.png"

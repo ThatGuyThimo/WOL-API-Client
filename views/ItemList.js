@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 10,
         paddingHorizontal: 10,
         marginBottom: 10,
+        height: 40,
     },
     darkSearchContainer: {
         backgroundColor: '#333',
