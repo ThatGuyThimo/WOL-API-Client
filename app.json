@@ -4,11 +4,11 @@
     "slug": "WOL-Client",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/WOLlogoTransparent.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/WOLlogoTransparent.png",
       "resizeMode": "contain",
       "backgroundColor": "#333333"
     },
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/WOLlogoTransparent.png",
         "backgroundColor": "#333333"
       },
       "package": "com.thimo.WOLClient"

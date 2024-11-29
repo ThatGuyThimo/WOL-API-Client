@@ -45,17 +45,26 @@ const ItemList = ({ navigation }) => {
     }, [searchQuery, data]);
     
     const fetchStatusData = async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
         try {
             const apiEndpoint = await AsyncStorage.getItem('apiEndpoint');
             if (!apiEndpoint) {
                 Alert.alert('Error', 'API endpoint is not set.');
                 return;
             }
-
             const updatedData = await Promise.all(data.map(async (item) => {
                 try {
                     const url = `${apiEndpoint}/WOL/status?MAC_ADDRESS=${item.macAddress}&IP_ADDRESS=${item.ipAddress}`;
-                    const response = await fetch(url);
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
@@ -66,8 +75,6 @@ const ItemList = ({ navigation }) => {
                     return { ...item, status: 'unknown' };
                 }
             }));
-
-
             setData(updatedData);
             setFilteredData(updatedData);
         } catch (error) {
@@ -76,9 +83,11 @@ const ItemList = ({ navigation }) => {
         }
     };
 
+    // setInterval(fetchStatusData, 60000); // Fetch every 10 seconds
     useEffect(() => {
-        setInterval(fetchStatusData, 30000); // Fetch every 5 seconds
-    }, [data]);
+        const interval = setInterval(fetchStatusData, 10000); // Fetch every 10 seconds
+        return () => clearInterval(interval); // Cleanup on unmount
+      }, [fetchStatusData]);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
@@ -93,7 +102,13 @@ const ItemList = ({ navigation }) => {
                 return;
             }
 
-            const response = await fetch(`${apiEndpoint}/WOL/wake?MAC_ADDRESS=${item.macAddress}&IP_ADDRESS=${item.ipAddress}`);
+            const url = `${apiEndpoint}/WOL/wake?MAC_ADDRESS=${item.macAddress}&IP_ADDRESS=${item.ipAddress}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
             const result = await response.text();
 
             if (response.status !== 200) {
@@ -134,11 +149,19 @@ const ItemList = ({ navigation }) => {
         );
     };
 
+    const saveDataWithUnknownStatus = async (newData) => {
+        const dataWithUnknownStatus = newData.map(item => ({
+            ...item,
+            status: 'unknown'
+        }));
+        await AsyncStorage.setItem('items', JSON.stringify(dataWithUnknownStatus));
+    };
+
     const deleteItem = async (id) => {
         const newData = data.filter(item => item.id !== id);
         setData(newData);
         try {
-            await AsyncStorage.setItem('items', JSON.stringify(newData));
+            await saveDataWithUnknownStatus(newData);
         } catch (error) {
             console.error('Failed to delete item from storage', error);
         }
