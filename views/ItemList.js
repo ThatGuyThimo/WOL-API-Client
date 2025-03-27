@@ -50,7 +50,7 @@ const ItemList = ({ navigation }) => {
         try {
             const apiEndpoint = await AsyncStorage.getItem('apiEndpoint');
             if (!apiEndpoint) {
-                Alert.alert('Error', 'API endpoint is not set.');
+                // Alert.alert('Error', 'API endpoint is not set.');
                 return;
             }
             const updatedData = await Promise.all(data.map(async (item) => {
