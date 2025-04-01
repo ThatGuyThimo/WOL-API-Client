@@ -4,6 +4,8 @@ import { StyleSheet, TextInput, TouchableOpacity, Text, View, useColorScheme } f
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ColorPickerComponent from '../components/ColorPicker';
 import { CommonActions } from '@react-navigation/native';
+import Checkbox from 'expo-checkbox';
+
 
 const EditItem = ({ route, navigation }) => {
     const { item } = route.params;
@@ -11,10 +13,11 @@ const EditItem = ({ route, navigation }) => {
     const [ipAddress, setIpAddress] = useState(item.ipAddress);
     const [macAddress, setMacAddress] = useState(item.macAddress);
     const [color, setColor] = useState(item.color);
+    const [isLocal, setLocal] = useState(item.isLocal);
     const colorScheme = useColorScheme();
 
     const saveItem = async () => {
-        const updatedItem = { ...item, name, ipAddress, macAddress, color };
+        const updatedItem = { ...item, name, ipAddress, macAddress, color, isLocal };
         try {
             const storedData = await AsyncStorage.getItem('items');
             const items = storedData ? JSON.parse(storedData) : [];
@@ -54,6 +57,17 @@ const EditItem = ({ route, navigation }) => {
                 value={macAddress}
                 onChangeText={setMacAddress}
             />
+            <View style={styles.checkboxContainer}>
+                <Text style={[styles.checkboxLabel, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>
+                    Local Machine
+                </Text>
+                <Checkbox
+                    // style={styles.checkboxContainer}
+                    value={isLocal}
+                    onValueChange={setLocal}
+                    color={isLocal ? '#009B72' : undefined}
+                />
+            </View>
             <ColorPickerComponent initialColor={color} onColorSelected={setColor} />
             <TouchableOpacity style={styles.saveButton} onPress={saveItem}>
                 <Text style={styles.saveButtonText}>Save Item</Text>
@@ -77,6 +91,21 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 16,
         fontWeight : 'bold',
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    checkboxLabel: {
+        marginRight: 8,
+        fontSize: 16,
+    },
+    darkText: {
+        color: '#fff',
+    },
+    lightText: {
+        color: '#00120B',
     },
     darkContainer: {
         backgroundColor: '#00120B',

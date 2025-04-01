@@ -174,6 +174,7 @@ const ItemList = ({ navigation }) => {
             macAddress={item.macAddress}
             color={item.color}
             status={item.status}
+            isLocal={item.isLocal}
             onPress={() => handleItemPress(item)}
             onLongPress={() => handleItemLongPress(item)}
         />

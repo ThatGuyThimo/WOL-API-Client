@@ -4,16 +4,18 @@ import { StyleSheet, TextInput, View, useColorScheme, TouchableOpacity, Text } f
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ColorPickerComponent from '../components/ColorPicker';
 import { CommonActions } from '@react-navigation/native';
+import Checkbox from 'expo-checkbox';
 
 const CreateItem = ({ navigation }) => {
     const [name, setName] = useState('');
     const [ipAddress, setIpAddress] = useState('');
     const [macAddress, setMacAddress] = useState('');
     const [color, setColor] = useState('');
+    const [isLocal, setLocal] = useState(false);
     const colorScheme = useColorScheme();
 
     const saveItem = async () => {
-        const newItem = { id: Date.now().toString(), name, ipAddress, macAddress, color };
+        const newItem = { id: Date.now().toString(), name, ipAddress, macAddress, color, isLocal };
         try {
             const storedData = await AsyncStorage.getItem('items');
             const items = storedData ? JSON.parse(storedData) : [];
@@ -53,6 +55,17 @@ const CreateItem = ({ navigation }) => {
                 value={macAddress}
                 onChangeText={setMacAddress}
             />
+            <View style={styles.checkboxContainer}>
+                <Text style={[styles.checkboxLabel, colorScheme === 'dark' ? styles.darkText : styles.lightText]}>
+                    Local Machine
+                </Text>
+                <Checkbox
+                    // style={styles.checkboxContainer}
+                    value={isLocal}
+                    onValueChange={setLocal}
+                    color={isLocal ? '#009B72' : undefined}
+                />
+            </View>
             <ColorPickerComponent onColorSelected={setColor} />
             <TouchableOpacity style={styles.saveButton} onPress={saveItem}>
                 <Text style={styles.saveButtonText}>Save Item</Text>
@@ -76,6 +89,21 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 16,
         fontWeight : 'bold',
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    checkboxLabel: {
+        marginRight: 8,
+        fontSize: 16,
+    },
+    darkText: {
+        color: '#fff',
+    },
+    lightText: {
+        color: '#00120B',
     },
     darkContainer: {
         backgroundColor: '#00120B',

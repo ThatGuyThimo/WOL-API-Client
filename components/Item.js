@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, useColorScheme } from 'react-native';
 
-const Item = ({ name, ipAddress, macAddress, color, status, onPress, onLongPress }) => {
+const Item = ({ name, ipAddress, macAddress, color, status, isLocal, onPress, onLongPress }) => {
     const colorScheme = useColorScheme();
 
     const getStatusStyle = () => {
@@ -17,7 +17,7 @@ const Item = ({ name, ipAddress, macAddress, color, status, onPress, onLongPress
         }
     };
 
-    const { color: statusColor, text: statusText } = getStatusStyle();
+    const { color: statusColor, text: statusText} = getStatusStyle();
 
     return (
         <TouchableOpacity
@@ -42,6 +42,7 @@ const Item = ({ name, ipAddress, macAddress, color, status, onPress, onLongPress
                 <View style={styles.statusContainer}>
                     <View style={[styles.statusIcon, { backgroundColor: statusColor }]} />
                     <Text style={[styles.statusText, { color: statusColor }]}>{statusText}</Text>
+                    <Text style={[styles.localText]}>{ isLocal? 'Local' : 'API'}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -103,6 +104,15 @@ const styles = StyleSheet.create({
     },
     statusText: {
         fontSize: 14,
+    },
+    localText: {
+        fontSize: 14,
+        color: 'green',
+        marginLeft: 10,
+        borderRadius: 5,
+        borderColor: 'green',
+        borderWidth: 1,
+        padding: 2,
     },
 });
 
