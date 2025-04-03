@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Item from '../components/Item';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Notification from '../components/Notification';
+import { MagickPacket, SendMagickPacket, CheckDeviceStatus } from '../components/LocalDevice';
 
 const ItemList = ({ navigation }) => {
     const [data, setData] = useState([]);
@@ -96,6 +97,10 @@ const ItemList = ({ navigation }) => {
 
     const handleItemPress = async (item) => {
         try {
+            if (item.isLocal) {
+
+
+            }
             const apiEndpoint = await AsyncStorage.getItem('apiEndpoint');
             if (!apiEndpoint) {
                 Alert.alert('Error', 'API endpoint is not set.');

@@ -42,7 +42,7 @@ const Item = ({ name, ipAddress, macAddress, color, status, isLocal, onPress, on
                 <View style={styles.statusContainer}>
                     <View style={[styles.statusIcon, { backgroundColor: statusColor }]} />
                     <Text style={[styles.statusText, { color: statusColor }]}>{statusText}</Text>
-                    <Text style={[styles.localText]}>{ isLocal? 'Local' : 'API'}</Text>
+                    <Text style={[styles.localText]}>{ isLocal ? 'Local' : 'API'}</Text>
                 </View>
             </View>
         </TouchableOpacity>
